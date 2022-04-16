@@ -1,14 +1,14 @@
 image:
-	docker build -t lambda-active-record-2 .
+	docker build -t lambda-active-record-postgres .
 
 shell:
-	docker run --rm -it -v $$PWD:/var/task -w /var/task lambda-active-record-2
+	docker run --rm -it -v $$PWD:/var/task -w /var/task lambda-active-record-postgres
 
 install:
-	docker run --rm -it -v $$PWD:/var/task -w /var/task lambda-active-record-2 make _install
+	docker run --rm -it -v $$PWD:/var/task -w /var/task lambda-active-record-postgres make _install
 
 test:
-	docker run --rm -it -v $$PWD:/var/task -w /var/task lambda-active-record-2 make _test
+	docker run --rm -it -v $$PWD:/var/task -w /var/task lambda-active-record-postgres make _test
 
 clean:
 	rm -rf .bundle/
@@ -20,13 +20,13 @@ deploy:
 	zip -q -r deploy.zip . -x .git/\*
 	aws lambda update-function-code \
 			--region us-east-1 \
-			--function-name test-active-record \
+			--function-name [YOUR_FUNCTIONA_NAME] \
 			--zip-file fileb://deploy.zip
 
 invoke:
 	aws lambda invoke \
 		--region us-east-1 \
-		--function-name test-active-record /dev/stdout
+		--function-name [YOUR_FUNCTIONA_NAME] /dev/stdout
 
 _install:
 	bundle config --local build.pg --with-pg-config=/usr/pgsql-10/bin/pg_config
